@@ -19,11 +19,11 @@ class ArtRepository implements IArtRepository {
   @override
   RequestOperation<List<ArtEntity>> getArts() async {
     try {
+      /// Получаем список картин по запросу
       final data = await apiClient.getArts();
 
-      /// PaginationWrapperDto<List<ArtDto>>
-
       return Result.ok(
+        /// Конвертируем результат в [List<ArtEntity>] с помощью адаптера
         artConverter.convertMultiple(data.data).toList(),
       );
     } on Object catch (e) {

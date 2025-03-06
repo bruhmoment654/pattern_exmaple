@@ -4,7 +4,11 @@ import 'package:pattern_exmaple/features/example/domain/art_bloc/art_bloc.dart';
 import 'package:pattern_exmaple/features/example/presentation/screen/art_view.dart';
 
 abstract interface class ArtViewModel {
+  /// то же самое что и [ArtBloc], но через этот класс нельзя отправлять события.
   StateStreamable<ArtState> get artState;
+
+  /// Событие перезагрузки данных.
+  void onRefreshPressed();
 }
 
 class ArtViewModelWidget extends StatefulWidget {
@@ -30,4 +34,11 @@ class _ArtViewModelWidgetState extends State<ArtViewModelWidget>
 
   @override
   StateStreamable<ArtState> get artState => widget.artBloc;
+
+  @override
+  void onRefreshPressed() {
+    /// Передаем данные из `ViewModel` в `Model` через события
+    /// Обратно данные попадут через состояния, которые слушает экран с помощью [BlocBuilder]
+    widget.artBloc.add(const ArtEvent.dataRequested());
+  }
 }

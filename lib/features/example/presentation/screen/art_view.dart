@@ -18,17 +18,26 @@ class ArtView extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
+      /// Строим экран в зависимости от состояния [ArtState]
       body: BlocBuilder<StateStreamable<ArtState>, ArtState>(
         bloc: viewModel.artState,
         builder: (_, state) => switch (state) {
           ArtLoading() => const Center(
               child: CircularProgressIndicator(),
             ),
-          ArtError() => Center(
-              child: Text(
-                'Error',
-                style: TextStyle(color: colorScheme.error),
-              ),
+          ArtError() => Column(
+              children: [
+                Text(
+                  'Error',
+                  style: TextStyle(color: colorScheme.error),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  /// Все действия кнопок реализуем не в классе [ArtView], а в классе [ArtViewModel]
+                  onPressed: viewModel.onRefreshPressed,
+                  child: const Text('Refresh'),
+                ),
+              ],
             ),
           ArtData(:final arts) => _ArtBody(arts: arts),
         },
